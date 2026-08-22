@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Gouzzo - Completos</title>
+    <link rel="icon" href="img/favicon (1).png" type="image/png">
     <style>
         /* CSS Reset & Variables (Estilo Minimalista Tipo Chipotle) */
         :root {
@@ -17,14 +18,11 @@
         body { background-color: var(--white); color: var(--dark); padding-bottom: 80px; }
 
         /* Header Minimalista */
-        header { background-color: var(--white); padding: 15px 5%; display: flex; justify-content: space-between; align-items: center; position: sticky; top: 0; z-index: 100; box-shadow: 0 1px 5px rgba(0,0,0,0.05); }
-        header img { max-height: 50px; object-fit: contain; }
-        .nav-links { display: none; } /* Oculto en móviles por ahora */
-        @media (min-width: 768px) {
-            .nav-links { display: flex; gap: 30px; font-weight: 800; font-size: 0.9rem; text-transform: uppercase; color: var(--dark); }
-            .nav-links span { cursor: pointer; }
-            .nav-links span:hover { color: var(--primary); }
-        }
+        header { background-color: var(--white); padding: 15px 5%; display: flex; flex-direction: column; justify-content: center; align-items: center; position: sticky; top: 0; z-index: 100; box-shadow: 0 1px 5px rgba(0,0,0,0.05); gap: 10px; }
+        header img { max-height: 60px; object-fit: contain; }
+        .nav-links { display: flex; gap: 25px; font-weight: 800; font-size: 0.9rem; text-transform: uppercase; color: var(--dark); }
+        .nav-links span { cursor: pointer; transition: 0.2s; }
+        .nav-links span:hover { color: var(--primary); }
 
         /* Hero Banner */
         .hero { 
@@ -121,7 +119,7 @@
 <body>
 
     <header>
-        <img src="img/logo.jpeg" alt="Gouzzo Logo">
+        <img src="img/logo nuevo.png" alt="Demo Logo">
         <div class="nav-links">
             <span onclick="document.getElementById('menu').scrollIntoView({behavior: 'smooth'})">Menú</span>
             <span onclick="document.getElementById('promos').scrollIntoView({behavior: 'smooth'})">Promos</span>
@@ -374,6 +372,13 @@
                 <input type="text" id="customer-address" placeholder="Calle, Número, Depto">
             </div>
 
+            <div class="form-group" style="margin-top: 15px;">
+                <label style="font-size: 0.85rem; display: flex; align-items: center; gap: 8px;">
+                    <input type="checkbox" id="privacy-terms">
+                    Acepto el uso de estos datos exclusivamente para la entrega del pedido.
+                </label>
+            </div>
+
             <div class="modal-actions">
                 <button class="btn-cancel" onclick="closeModal('checkout-modal')">Volver</button>
                 <button class="btn-confirm" onclick="sendWhatsApp()">Pedir por WhatsApp</button>
@@ -545,6 +550,9 @@
             let deliveryType = document.getElementById('delivery-type').value;
             let address = document.getElementById('customer-address').value;
             if (deliveryType === 'delivery' && !address) { alert("Por favor ingresa tu dirección para el envío."); return; }
+            
+            let terms = document.getElementById('privacy-terms').checked;
+            if (!terms) { alert("Debes aceptar los términos de uso de datos para continuar."); return; }
 
             let text = `*🔥 NUEVO PEDIDO GOUZZO 🔥*\n\n`;
             text += `*Cliente:* ${name}\n`;
