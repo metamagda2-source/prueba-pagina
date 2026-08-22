@@ -61,6 +61,16 @@
         .hero button { background: var(--primary); color: var(--white); border: none; padding: 15px 30px; font-size: 1.1rem; font-weight: 900; text-transform: uppercase; cursor: pointer; transition: 0.2s; border-radius: 3px; }
         .hero button:hover { background: #A9080D; transform: scale(1.05); }
 
+        /* Cómo Funciona */
+        .how-it-works { background: var(--gray); padding: 30px 5%; margin-bottom: 20px; text-align: center; }
+        .how-it-works h3 { font-size: 1.5rem; font-weight: 900; text-transform: uppercase; color: var(--dark); margin-bottom: 20px; }
+        .steps-container { display: flex; flex-direction: column; gap: 20px; max-width: 900px; margin: 0 auto; }
+        @media (min-width: 768px) { .steps-container { flex-direction: row; justify-content: space-between; } }
+        .step { flex: 1; padding: 20px; background: var(--white); border-radius: 8px; box-shadow: 0 4px 10px rgba(0,0,0,0.05); }
+        .step-number { background: var(--primary); color: var(--white); width: 40px; height: 40px; display: flex; align-items: center; justify-content: center; font-size: 1.2rem; font-weight: 900; border-radius: 50%; margin: 0 auto 15px auto; }
+        .step h4 { font-size: 1.1rem; font-weight: 900; text-transform: uppercase; margin-bottom: 10px; color: var(--dark); }
+        .step p { font-size: 0.9rem; color: #666; line-height: 1.4; }
+
         /* Contenedor Principal */
         main { max-width: 1200px; margin: 0 auto; padding: 40px 5%; text-align: center; }
 
@@ -142,6 +152,28 @@
             <h1>El Completo Perfecto</h1>
             <p>Preparado al instante. Directo a tu mesa.</p>
             <button onclick="document.getElementById('menu').scrollIntoView({behavior: 'smooth'})">Pide Ahora</button>
+        </div>
+    </div>
+
+    <!-- Cómo Funciona (Para vender la plantilla) -->
+    <div class="how-it-works">
+        <h3>¿Cómo funciona nuestro sistema?</h3>
+        <div class="steps-container">
+            <div class="step">
+                <div class="step-number">1</div>
+                <h4>Arma tu Pedido</h4>
+                <p>Navega por nuestro menú, personaliza tus ingredientes exactos y agrega tus completos o combos al carrito visual.</p>
+            </div>
+            <div class="step">
+                <div class="step-number">2</div>
+                <h4>Confirma tus Datos</h4>
+                <p>Ingresa tu nombre, elige si quieres delivery o retiro en el local, y revisa el total de tu pedido al instante.</p>
+            </div>
+            <div class="step">
+                <div class="step-number">3</div>
+                <h4>Envío a WhatsApp</h4>
+                <p>Con un solo click, todo tu pedido se envía a nuestro WhatsApp oficial para procesarlo y coordinar el pago. ¡Sin intermediarios!</p>
+            </div>
         </div>
     </div>
 
@@ -327,16 +359,16 @@
                 <label><input type="checkbox" class="mod-checkbox" value="Sin Palta"> Sin Palta</label>
                 <label><input type="checkbox" class="mod-checkbox" value="Sin Tomate"> Sin Tomate</label>
                 <label><input type="checkbox" class="mod-checkbox" value="Sin Chucrut"> Sin Chucrut</label>
-                <label><input type="checkbox" class="mod-checkbox" value="Sin Mayo"> Sin Mayo</label>
-                <label><input type="checkbox" class="mod-checkbox" value="Sin Ketchup"> Sin Ketchup</label>
-                <label><input type="checkbox" class="mod-checkbox" value="Sin Mostaza"> Sin Mostaza</label>
+                <label><input type="checkbox" class="mod-checkbox" id="sin-mayo" value="Sin Mayo" onchange="handleConflict('sin-mayo', 'extra-mayo')"> Sin Mayo</label>
+                <label><input type="checkbox" class="mod-checkbox" id="sin-ketchup" value="Sin Ketchup" onchange="handleConflict('sin-ketchup', 'extra-ketchup')"> Sin Ketchup</label>
+                <label><input type="checkbox" class="mod-checkbox" id="sin-mostaza" value="Sin Mostaza" onchange="handleConflict('sin-mostaza', 'extra-mostaza')"> Sin Mostaza</label>
             </div>
 
             <div class="section-title">Salsas Extra (Gratis)</div>
             <div class="checkbox-group">
-                <label><input type="checkbox" class="extra-checkbox" value="Extra Ketchup" data-price="0" onchange="updateModalPrice()"> Agregar Más Ketchup</label>
-                <label><input type="checkbox" class="extra-checkbox" value="Extra Mayo" data-price="0" onchange="updateModalPrice()"> Agregar Más Mayonesa</label>
-                <label><input type="checkbox" class="extra-checkbox" value="Extra Mostaza" data-price="0" onchange="updateModalPrice()"> Agregar Más Mostaza</label>
+                <label><input type="checkbox" class="extra-checkbox" id="extra-ketchup" value="Extra Ketchup" data-price="0" onchange="updateModalPrice(); handleConflict('extra-ketchup', 'sin-ketchup')"> Agregar Más Ketchup</label>
+                <label><input type="checkbox" class="extra-checkbox" id="extra-mayo" value="Extra Mayo" data-price="0" onchange="updateModalPrice(); handleConflict('extra-mayo', 'sin-mayo')"> Agregar Más Mayonesa</label>
+                <label><input type="checkbox" class="extra-checkbox" id="extra-mostaza" value="Extra Mostaza" data-price="0" onchange="updateModalPrice(); handleConflict('extra-mostaza', 'sin-mostaza')"> Agregar Más Mostaza</label>
             </div>
 
             <div class="modal-actions">
@@ -425,6 +457,14 @@
         const PHONE_NUMBER = "56992963622"; 
 
         function closeModal(id) { document.getElementById(id).style.display = 'none'; }
+
+        function handleConflict(clickedId, conflictId) {
+            let clickedEl = document.getElementById(clickedId);
+            let conflictEl = document.getElementById(conflictId);
+            if (clickedEl && clickedEl.checked && conflictEl) {
+                conflictEl.checked = false;
+            }
+        }
 
         function openLegal(type) {
             let title = '';
