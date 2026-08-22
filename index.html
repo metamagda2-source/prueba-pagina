@@ -114,6 +114,13 @@
         .cart-item-row { display: flex; justify-content: space-between; margin-bottom: 15px; border-bottom: 1px solid #ddd; padding-bottom: 15px; font-weight: bold; }
         .cart-item-row:last-child { border-bottom: none; margin-bottom: 0; padding-bottom: 0; }
         .totals-row { display: flex; justify-content: space-between; font-weight: 900; margin-top: 15px; color: var(--dark); font-size: 1.1rem; }
+        
+        /* Footer Legal */
+        .site-footer { background: var(--gray); padding: 40px 5%; text-align: center; color: #555; font-size: 0.85rem; border-top: 1px solid #ddd; margin-top: 40px; }
+        .footer-links { display: flex; justify-content: center; flex-wrap: wrap; gap: 15px; margin-bottom: 20px; }
+        .footer-links a { color: var(--dark); text-decoration: none; font-weight: bold; text-transform: uppercase; transition: 0.2s; }
+        .footer-links a:hover { color: var(--primary); text-decoration: underline; }
+        .footer-disclaimer { max-width: 800px; margin: 0 auto; line-height: 1.5; color: #777; }
     </style>
 </head>
 <body>
@@ -268,6 +275,29 @@
         </div>
     </main>
 
+    <!-- Footer Legal -->
+    <footer class="site-footer">
+        <div class="footer-links">
+            <a href="#" onclick="openLegal('terminos'); return false;">Términos y condiciones</a>
+            <a href="#" onclick="openLegal('legal'); return false;">Información Legal</a>
+            <a href="#" onclick="openLegal('privacidad'); return false;">Política de Privacidad</a>
+        </div>
+        <div class="footer-disclaimer">
+            <p><strong>Aviso Legal:</strong> Las fotografías de los productos son únicamente referenciales y con fines ilustrativos. El aspecto del producto final entregado puede variar ligeramente respecto al de la imagen promocional (por ejemplo, distribución de ingredientes como chucrut, salsas, o proporciones). Los precios y disponibilidad están sujetos a cambios sin previo aviso.</p>
+        </div>
+    </footer>
+
+    <!-- Modal Legal Textos -->
+    <div class="modal" id="legal-modal">
+        <div class="modal-content">
+            <h3 id="legal-title">Legal</h3>
+            <div id="legal-text" style="font-size: 0.9rem; color: #555; line-height: 1.6; max-height: 400px; overflow-y: auto; margin-bottom: 20px;"></div>
+            <div class="modal-actions">
+                <button class="btn-cancel" onclick="closeModal('legal-modal')">Cerrar</button>
+            </div>
+        </div>
+    </div>
+
     <!-- Barra Inferior de Carrito -->
     <div class="cart-bar" id="cart-bar" onclick="openCheckout()">
         <span id="cart-total-text">Cesta (0)</span>
@@ -304,9 +334,9 @@
 
             <div class="section-title">Salsas Extra (Gratis)</div>
             <div class="checkbox-group">
-                <label><input type="checkbox" class="extra-checkbox" value="Extra Ketchup" data-price="0" onchange="updateModalPrice()"> Ketchup</label>
-                <label><input type="checkbox" class="extra-checkbox" value="Extra Mayo" data-price="0" onchange="updateModalPrice()"> Mayonesa</label>
-                <label><input type="checkbox" class="extra-checkbox" value="Extra Mostaza" data-price="0" onchange="updateModalPrice()"> Mostaza</label>
+                <label><input type="checkbox" class="extra-checkbox" value="Extra Ketchup" data-price="0" onchange="updateModalPrice()"> Agregar Más Ketchup</label>
+                <label><input type="checkbox" class="extra-checkbox" value="Extra Mayo" data-price="0" onchange="updateModalPrice()"> Agregar Más Mayonesa</label>
+                <label><input type="checkbox" class="extra-checkbox" value="Extra Mostaza" data-price="0" onchange="updateModalPrice()"> Agregar Más Mostaza</label>
             </div>
 
             <div class="modal-actions">
@@ -395,6 +425,24 @@
         const PHONE_NUMBER = "56992963622"; 
 
         function closeModal(id) { document.getElementById(id).style.display = 'none'; }
+
+        function openLegal(type) {
+            let title = '';
+            let text = '';
+            if (type === 'terminos') {
+                title = 'Términos y Condiciones';
+                text = 'Al realizar un pedido a través de nuestra plataforma, aceptas que el medio de contacto y confirmación oficial será WhatsApp. Los tiempos de entrega y preparación son estimados y pueden variar según la demanda. El pedido no será ingresado a cocina hasta que se confirme la transferencia bancaria o el método de pago acordado. Los precios están sujetos a cambios sin previo aviso.';
+            } else if (type === 'legal') {
+                title = 'Información Legal';
+                text = 'Esta plataforma web funciona exclusivamente como un catálogo digital e interfaz de pedidos conectada a WhatsApp. No procesamos pagos con tarjeta directamente en el sitio web ni almacenamos bases de datos de clientes en servidores web. Para cualquier reclamo o consulta comercial, el canal de comunicación es nuestro número de atención vía WhatsApp.';
+            } else if (type === 'privacidad') {
+                title = 'Política de Privacidad';
+                text = 'Respetamos tu privacidad. Los datos solicitados (nombre, dirección y pedido) son generados localmente en tu navegador y transferidos bajo tu propio consentimiento a la aplicación de WhatsApp. No vendemos, compartimos ni almacenamos tus datos personales en servidores externos de terceros. Los datos solo se utilizan operativamente para poder entregar tu pedido a domicilio o coordinar el retiro.';
+            }
+            document.getElementById('legal-title').innerText = title;
+            document.getElementById('legal-text').innerText = text;
+            document.getElementById('legal-modal').style.display = 'flex';
+        }
 
         function addDirect(name, price) {
             cart.push({ name: name, price: price, mods: [], total: price });
