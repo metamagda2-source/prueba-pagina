@@ -161,9 +161,9 @@
                 <div class="product-info">
                     <h3>Completo Dinámico</h3>
                     <p>Vienesa, Palta, Tomate, Americana, Chucrut, Mayo.</p>
-                    <div class="product-price">Desde $1.800</div>
+                    <div class="product-price">Desde $2.000</div>
                 </div>
-                <button class="btn-add" onclick="openCustomize('Completo Dinámico', 1800, true)">Pedir</button>
+                <button class="btn-add" onclick="openCustomize('Completo Dinámico', 2000, true)">Pedir</button>
             </div>
 
             <!-- 3. Completo Tradicional -->
@@ -172,9 +172,9 @@
                 <div class="product-info">
                     <h3>Completo Tradicional</h3>
                     <p>Vienesa, Tomate, Americana, Chucrut, Mayo.</p>
-                    <div class="product-price">Desde $1.400</div>
+                    <div class="product-price">Desde $1.500</div>
                 </div>
-                <button class="btn-add" onclick="openCustomize('Completo Tradicional', 1400, true)">Pedir</button>
+                <button class="btn-add" onclick="openCustomize('Completo Tradicional', 1500, true)">Pedir</button>
             </div>
 
             <!-- 4. Hot Dog -->
@@ -234,28 +234,38 @@
         </div>
 
         <h2 id="promos">Combos & Promos Familiares</h2>
-
         <div class="menu-grid">
-            <!-- Promo 1 -->
+            <!-- Promo Pareja -->
             <div class="product-card">
-                <img src="https://images.unsplash.com/photo-1627308595229-7830f5c9099d?auto=format&fit=crop&q=80&w=800" alt="Combo Solitario" class="product-image">
+                <img src="img/Completos/combo duo.png" alt="Combo Dúo" class="product-image">
                 <div class="product-info">
-                    <h3>Combo Solitario</h3>
-                    <p>1 Italiano Mediano + Bebida Lata.</p>
-                    <div class="product-price">$2.000</div>
+                    <h3>Combo Dúo (x2)</h3>
+                    <p>2 Completos + 2 Bebidas Lata.</p>
+                    <div class="product-price">Desde $4.900</div>
                 </div>
-                <button class="btn-add" onclick="addDirect('Combo Solitario', 2000)">Pedir</button>
+                <button class="btn-add" onclick="openPromoModal('Combo Dúo', 2, 4900)">Armar</button>
             </div>
 
-            <!-- Promo 2 -->
+            <!-- Promo Familiar x3 -->
             <div class="product-card">
-                <img src="https://images.unsplash.com/photo-1594212691511-b0e6e768ca06?auto=format&fit=crop&q=80&w=800" alt="Promo Familiar" class="product-image">
+                <img src="img/Completos/combo trio.png" alt="Combo Trío" class="product-image">
                 <div class="product-info">
-                    <h3>Promo Familiar</h3>
-                    <p>5 Italianos Medianos.</p>
-                    <div class="product-price">$7.000</div>
+                    <h3>Combo Trío (x3)</h3>
+                    <p>3 Completos + 3 Bebidas Lata.</p>
+                    <div class="product-price">Desde $7.200</div>
                 </div>
-                <button class="btn-add" onclick="addDirect('Promo 5 Completos Medianos', 7000)">Pedir</button>
+                <button class="btn-add" onclick="openPromoModal('Combo Trío', 3, 7200)">Armar</button>
+            </div>
+
+            <!-- Promo Familiar x4 -->
+            <div class="product-card">
+                <img src="img/Completos/combo squad.png" alt="Combo Squad" class="product-image">
+                <div class="product-info">
+                    <h3>Combo Squad (x4)</h3>
+                    <p>4 Completos + 4 Bebidas Lata.</p>
+                    <div class="product-price">Desde $9.500</div>
+                </div>
+                <button class="btn-add" onclick="openPromoModal('Combo Squad', 4, 9500)">Armar</button>
             </div>
         </div>
     </main>
@@ -277,6 +287,10 @@
                 <div class="checkbox-group">
                     <label><input type="radio" name="size" value="Mediano" data-price="0" checked onchange="updateModalPrice()"> Normal (1 Vienesa)</label>
                     <label><input type="radio" name="size" value="XL" data-price="1000" onchange="updateModalPrice()"> XL (Doble Vienesa) +$1.000</label>
+                </div>
+                <div class="section-title">¿Combo Individual?</div>
+                <div class="checkbox-group">
+                    <label><input type="checkbox" id="combo-checkbox" class="extra-checkbox" value="Combo Individual (+ Bebida)" data-price="1100" onchange="updateModalPrice()"> Agregar Bebida Lata (+$1.100)</label>
                 </div>
             </div>
 
@@ -300,6 +314,23 @@
             <div class="modal-actions">
                 <button class="btn-cancel" onclick="closeModal('custom-modal')">Cancelar</button>
                 <button class="btn-confirm" onclick="confirmCustomItem()">Agregar</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal de Promociones -->
+    <div class="modal" id="promo-modal">
+        <div class="modal-content">
+            <h3 id="promo-title">Arma tu Promo</h3>
+            <div class="modal-price-preview" id="promo-price-preview">$0</div>
+            
+            <p style="font-size: 0.9rem; color: #555; margin-bottom: 15px;">Elige los completos para tu promo.</p>
+            
+            <div id="promo-selectors-container"></div>
+            
+            <div class="modal-actions">
+                <button class="btn-cancel" onclick="closeModal('promo-modal')">Cancelar</button>
+                <button class="btn-confirm" onclick="confirmPromo()">Agregar al Carrito</button>
             </div>
         </div>
     </div>
@@ -362,6 +393,69 @@
 
         function addDirect(name, price) {
             cart.push({ name: name, price: price, mods: [], total: price });
+            updateCartUI();
+        }
+
+        let currentPromo = null;
+        function openPromoModal(title, quantity, basePrice) {
+            currentPromo = { name: title, basePrice: basePrice, quantity: quantity };
+            document.getElementById('promo-title').innerText = title;
+            
+            let html = '';
+            for(let i=1; i<=quantity; i++) {
+                html += `
+                <div class="form-group" style="margin-bottom: 10px;">
+                    <label>Completo ${i}</label>
+                    <select class="promo-select" onchange="updatePromoPrice()">
+                        <option value="Italiano" data-extra="0">Italiano</option>
+                        <option value="Tradicional" data-extra="0">Tradicional</option>
+                        <option value="Hot Dog" data-extra="0">Hot Dog</option>
+                        <option value="Dinámico" data-extra="500">Dinámico (+$500)</option>
+                        <option value="Vegano" data-extra="500">Cualquier Vegano (+$500)</option>
+                    </select>
+                </div>
+                `;
+            }
+            
+            // Agregar input para las bebidas
+            html += `
+            <div class="form-group" style="margin-top: 15px; border-top: 2px dashed #ddd; padding-top: 15px;">
+                <label>Bebidas (${quantity} en total)</label>
+                <input type="text" id="promo-drinks" placeholder="Ej: 2 Coca Cola, ${quantity === 4 ? '2' : '1'} Sprite Zero">
+            </div>
+            `;
+            
+            document.getElementById('promo-selectors-container').innerHTML = html;
+            updatePromoPrice();
+            document.getElementById('promo-modal').style.display = 'flex';
+        }
+
+        function updatePromoPrice() {
+            let total = currentPromo.basePrice;
+            document.querySelectorAll('.promo-select').forEach(select => {
+                let selectedOption = select.options[select.selectedIndex];
+                total += parseInt(selectedOption.getAttribute('data-extra'));
+            });
+            document.getElementById('promo-price-preview').innerText = `$${total.toLocaleString('es-CL')}`;
+            currentPromo.currentTotal = total;
+        }
+
+        function confirmPromo() {
+            let mix = [];
+            document.querySelectorAll('.promo-select').forEach((select, index) => {
+                mix.push(`C${index+1}: ${select.value}`);
+            });
+            
+            let drinks = document.getElementById('promo-drinks').value || 'Sabor a elección en el local';
+            mix.push(`Bebidas: ${drinks}`);
+            
+            cart.push({ 
+                name: currentPromo.name, 
+                price: currentPromo.basePrice, 
+                mods: [`Mezcla: ${mix.join(' | ')}`], 
+                total: currentPromo.currentTotal 
+            });
+            closeModal('promo-modal');
             updateCartUI();
         }
 
@@ -476,6 +570,24 @@
 
             window.open(`https://wa.me/${PHONE_NUMBER}?text=${encodeURIComponent(text)}`, '_blank');
         }
+
+        // --- Protección de Código Fuente (Anti-Copia Básica) ---
+        // Bloquea el click derecho
+        document.addEventListener('contextmenu', event => event.preventDefault()); 
+        
+        // Bloquea atajos de teclado para ver el código
+        document.addEventListener('keydown', (e) => {
+            // F12
+            if (e.key === 'F12') { e.preventDefault(); return false; }
+            // Ctrl+Shift+I (Herramientas de desarrollador)
+            if (e.ctrlKey && e.shiftKey && (e.key === 'I' || e.key === 'i')) { e.preventDefault(); return false; }
+            // Ctrl+Shift+J (Consola)
+            if (e.ctrlKey && e.shiftKey && (e.key === 'J' || e.key === 'j')) { e.preventDefault(); return false; }
+            // Ctrl+U (Ver código fuente)
+            if (e.ctrlKey && (e.key === 'U' || e.key === 'u')) { e.preventDefault(); return false; }
+            // Ctrl+S (Guardar página)
+            if (e.ctrlKey && (e.key === 'S' || e.key === 's')) { e.preventDefault(); return false; }
+        });
     </script>
 </body>
 </html>
